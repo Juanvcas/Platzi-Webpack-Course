@@ -2,8 +2,11 @@ const path = require("path");
     // Este es un modulo que ya viene incluido con webpack.
 
 //Plugins
+    // Instanciamos los plugins para poder configurarlo en webpack.
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-    // Instanciamos el plugin para poder configurarlo en webpack.
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+
 
 //Configuración del proyecto
 module.exports = {
@@ -33,6 +36,15 @@ module.exports = {
                     // Aqui, configuramos que loaders se van a utilizar en nuestro proyecto.
                     loader: "babel-loader"
                 }
+            },
+            {
+                test: /\.css|.styl$/i,
+                exclude: /node_modules/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "stylus-loader"
+                ]
             }
         ]
     },
@@ -47,6 +59,7 @@ module.exports = {
                 // Este apartado nos sirve para indicar un template que va a utilizar el proyecto.
             filename: "index.html"
                 // Este partado nos sirve para indicar el nombre del archivo resultante de la compilación de HTML.
-        })
+        }),
+        new MiniCssExtractPlugin()
     ]
 }
