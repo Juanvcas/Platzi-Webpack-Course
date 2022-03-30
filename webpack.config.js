@@ -8,6 +8,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
 
 
 //Configuración del proyecto
@@ -97,7 +98,8 @@ module.exports = {
                         // Aqui, se esta indicando la ruta donde se van a pegar los archivos en la cartepa dist, y si no esta esata ruta, se creara.
                 }
             ]
-        })
+        }),
+        new Dotenv(),
     ],
     optimization: {
         minimize: true,
