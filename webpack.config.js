@@ -14,7 +14,7 @@ module.exports = {
         //Entry point, punto de inicio de donde va a partir todo el proyecto.
     output: { //Output
         path: path.resolve(__dirname, "dist"),
-            // En que carpeta va a enviar la compilación. (se crea si aun no lo esta)
+            // En que carpeta va a enviar la compilación (se crea si aun no lo esta), siando el path la raiz del proyecto y (__dirname, "dist") definiendo el nombre de la carpeta a crear.
         filename: "main.js",
             // Nombre del archivo con la extensión que va a contener el codigo resultante.
     },
@@ -45,6 +45,21 @@ module.exports = {
                     "css-loader",
                     "stylus-loader"
                 ]
+            },
+            {
+                test: /\.png$/i,
+                type: "asset/resource",
+                // De esta forma, configuramos el loader para que trabaje con las imagenes indicadas.
+                generator: {
+                    filename: "assets/images/[hash][ext]"
+                }
+            },
+            {
+                test: /\.(woff|woff2|eot|ttf|otf)$/i,
+                type: 'asset/resource',
+                generator: {
+                    filename: "assets/fonts/[name][ext]"
+                }
             }
         ]
     },
@@ -60,6 +75,17 @@ module.exports = {
             filename: "index.html"
                 // Este partado nos sirve para indicar el nombre del archivo resultante de la compilación de HTML.
         }),
-        new MiniCssExtractPlugin()
+        new MiniCssExtractPlugin(),
+        new CopyWebpackPlugin({
+            patterns: [
+                // Aqui, configuramos las rutas y archivos que se van a copiar la carpeta dist, configurando las rutas personalizadas.
+                {
+                    from: path.resolve(__dirname, "src", "assets/images"),
+                        // Aqui, se esta indicando la ruta desde donde va a coger los archivos que va a copiar.
+                    to: "assets/images"
+                        // Aqui, se esta indicando la ruta donde se van a pegar los archivos en la cartepa dist, y si no esta esata ruta, se creara.
+                }
+            ]
+        })
     ]
 }
