@@ -6,6 +6,8 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 
 //Configuración del proyecto
@@ -15,12 +17,19 @@ module.exports = {
     output: { //Output
         path: path.resolve(__dirname, "dist"),
             // En que carpeta va a enviar la compilación (se crea si aun no lo esta), siando el path la raiz del proyecto y (__dirname, "dist") definiendo el nombre de la carpeta a crear.
-        filename: "main.js",
+        filename: "[name].[contenthash].js",
             // Nombre del archivo con la extensión que va a contener el codigo resultante.
     },
     resolve: {
-        extensions: [".js"]
+        extensions: [".js"],
             // Con que extensiones va a trabajar, se deben de poner todas con las que va a compilar el royecto, si utiliza ya sea react, svelt u otro framework u otro lenguaje de programación, se debe de establecer aqui.
+        alias: {
+            "@utils": path.resolve(__dirname, "./src/utils/"),
+            "@templates": path.resolve(__dirname, "./src/templates/"),
+            "@styles": path.resolve(__dirname, "./src/styles/"),
+            "@images": path.resolve(__dirname, "./src/assets/images/"),
+            "@fonts": path.resolve(__dirname, "./src/assets/fonts/")
+        }
     },
 
     //Herramientas y loaders
@@ -58,7 +67,7 @@ module.exports = {
                 test: /\.(woff|woff2|eot|ttf|otf)$/i,
                 type: 'asset/resource',
                 generator: {
-                    filename: "assets/fonts/[name][ext]"
+                    filename: "assets/fonts/[name].[contenthash].[ext]"
                 }
             }
         ]
@@ -75,7 +84,9 @@ module.exports = {
             filename: "index.html"
                 // Este partado nos sirve para indicar el nombre del archivo resultante de la compilación de HTML.
         }),
-        new MiniCssExtractPlugin(),
+        new MiniCssExtractPlugin({
+            filename: "assets/[name].[contenthash].css"
+        }),
         new CopyWebpackPlugin({
             patterns: [
                 // Aqui, configuramos las rutas y archivos que se van a copiar la carpeta dist, configurando las rutas personalizadas.
@@ -87,5 +98,12 @@ module.exports = {
                 }
             ]
         })
-    ]
+    ],
+    optimization: {
+        minimize: true,
+        minimizer: [
+            new CssMinimizerPlugin(),
+            new TerserPlugin()
+        ]
+    }
 }
