@@ -9,6 +9,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
+const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 
 
 //Configuración del proyecto
@@ -73,6 +74,7 @@ module.exports = {
             }
         ]
     },
+    //Plugins
     plugins: [
         // Aqui se configuran los plugins que va a utilizar webpack, y se instancian con "new" y la variable que contiene al plugin.
         new HtmlWebpackPlugin({
@@ -100,6 +102,7 @@ module.exports = {
             ]
         }),
         new Dotenv(),
+        new CleanWebpackPlugin(),
     ],
     optimization: {
         minimize: true,
